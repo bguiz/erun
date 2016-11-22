@@ -1,0 +1,25 @@
+{
+  "name": "erun",
+  "version": "0.0.0",
+  "description": "Customisable npm run scripts for multiple environments",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bguiz/erun.git"
+  },
+  "keywords": [
+    "environment",
+    "npm",
+    "run",
+    "script"
+  ],
+  "author": "bguiz",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/bguiz/erun/issues"
+  },
+  "homepage": "https://github.com/bguiz/erun#readme"
+}
