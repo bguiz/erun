@@ -2,9 +2,24 @@
   "name": "erun",
   "version": "0.0.0",
   "description": "Customisable npm run scripts for multiple environments",
-  "main": "index.js",
+  "main": "erun.js",
+  "bin": {
+    "erun": "erun.js"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "sh test/test.sh",
+    "erun": "node ./erun.js "
+  },
+  "erun": {
+    "foobartest": {
+      "cmd": "echo FOO=${FOO} BAR=${BAR} FOOBAR=${FOOBAR} ENVIRONMENT=${ENVIRONMENT} > ./test/output/foobartest.out",
+      "env": {
+        "FOO": "foo",
+        "BAR": "bar",
+        "FOOBAR": "${FOO}-${BAR}",
+        "ENVIRONMENT": "${NODE_ENV}"
+      }
+    }
   },
   "repository": {
     "type": "git",
