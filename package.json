@@ -1,0 +1,40 @@
+{
+  "name": "erun",
+  "version": "0.1.0",
+  "description": "Customisable npm run scripts for multiple environments",
+  "main": "erun.js",
+  "bin": {
+    "erun": "erun.js"
+  },
+  "scripts": {
+    "test": "sh test/test.sh",
+    "erun": "node ./erun.js "
+  },
+  "erun": {
+    "foobartest": {
+      "cmd": "echo FOO=${FOO} BAR=${BAR} FOOBAR=${FOOBAR} ENVIRONMENT=${ENVIRONMENT} > ./test/output/foobartest.out",
+      "env": {
+        "FOO": "foo",
+        "BAR": "bar",
+        "FOOBAR": "${FOO}-${BAR}",
+        "ENVIRONMENT": "${NODE_ENV}"
+      }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bguiz/erun.git"
+  },
+  "keywords": [
+    "environment",
+    "npm",
+    "run",
+    "script"
+  ],
+  "author": "bguiz",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/bguiz/erun/issues"
+  },
+  "homepage": "https://github.com/bguiz/erun#readme"
+}
