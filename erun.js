@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * Usage:
+ *
+ * erun scriptName environmentName [args...]
+ *
+ **/
 
 'use strict';
 
@@ -34,10 +40,14 @@ if (!script) {
 	errors.push('No script');
 }
 
+if (!environment) {
+	errors.push('No environment');
+}
+
 // Use environment variables that the original process had, plus ones defined in "packageJson.erun[script].env",
 // and subtitute them in using the `${VARNAME}` convention
 const erunEnv = erunObject.env || {}; // Optional
-erunEnv.NODE_ENV = erunEnv.NODE_ENV || environment;
+erunEnv.NODE_ENV = erunEnv.NODE_ENV || environment || 'default';
 const envVarSubtitutionRegex = /\$\{([^\}]+)\}/g ;
 //TODO currently relies on key orders in object hash, which is not technically correct,
 // so devise a way to detect when this happens and substitute them later
@@ -49,7 +59,6 @@ Object.keys(erunEnv).forEach((key) => {
 	erunEnv[key] = substitutedValue;
 });
 const envVars = Object.assign({}, processEnv, erunEnv);
-
 
 // Substitute environment variables into main command as well,
 // and if they are mising, it will be an error
@@ -69,12 +78,14 @@ if (!command) {
 }
 
 if (errors.length > 0) {
-	console.error(`Failed erun with script='${script}'' environment='${environment}'`);
+	// Print errors and exit
+	console.error(`Failed erun with script='${script}' environment='${environment}'`);
 	errors.forEach((err) => {
 		console.error(`  - ${err}`);
 	});
 	process.exit(1);
 } else {
+	// Now we can finally run the command!
 	//TODO support non-unix shell as well
 	childProcess.spawn('sh', ['-c', command], {
 		env: envVars,
