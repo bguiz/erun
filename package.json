@@ -1,6 +1,6 @@
 {
   "name": "erun",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Customisable npm run scripts for multiple environments",
   "main": "erun.js",
   "bin": {
