@@ -47,7 +47,9 @@ if (!environment) {
 // Use environment variables that the original process had, plus ones defined in "packageJson.erun[script].env",
 // and subtitute them in using the `${VARNAME}` convention
 const erunEnv = erunObject.env || {}; // Optional
-erunEnv.NODE_ENV = erunEnv.NODE_ENV || environment || 'default';
+erunEnv.ERUN_SCRIPT = script;
+erunEnv.ERUN_ENVIRONMENT = erunEnv.NODE_ENV || environment || 'default';
+erunEnv.NODE_ENV = erunEnv.ERUN_ENVIRONMENT;
 const envVarSubtitutionRegex = /\$\{([^\}]+)\}/g ;
 //TODO currently relies on key orders in object hash, which is not technically correct,
 // so devise a way to detect when this happens and substitute them later
@@ -76,6 +78,7 @@ if (!command) {
 	});
 	command = `${command} ${erunArgs.join(' ')}`;
 }
+envVars.ERUN_COMMAND = command;
 
 if (errors.length > 0) {
 	// Print errors and exit
