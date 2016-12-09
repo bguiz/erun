@@ -2,7 +2,23 @@
 /**
  * Usage:
  *
- * erun scriptName environmentName [args...]
+ * erun scriptId [environmentId] [args...]
+ *
+ * - scriptId (compulsory) The name of the script
+ * - environmentId (optional) The name of the environment
+ *   - but when unspecfied, NODE_ENV environement variable must be set
+ * - args (optional) Any additional arguments
+ *
+ * Expected to find the following in package.json:
+ *
+ * - Either
+ *   - `packageJson.erun[scriptId]`, or
+ *   - `packageJson.erun[scriptId+' '+environmentId]`
+ * - Each of these should specify
+ *   - cmd (compulsory) A CLI string
+ *     - may use `${VAR}` type substitution of environment variables
+ *   - env (optional) A string-to-string hash of environment variables
+ *     - may use `${VAR}` type substitution of environment variables
  *
  **/
 
@@ -29,26 +45,45 @@ try {
 	packageJson = {};
 }
 
-let script = process.argv[2];
-let environment = process.argv[3];
-let erunArgs = process.argv.splice(4);
+let scriptId = process.argv[2];
+let environmentId = process.argv[3];
+let erunArgs;
+if (environmentId) {
+	erunArgs = process.argv.splice(4);
+} else {
+	// If environment name is unspecified in CLI, attempt to get it from environment variable (if it is set)
+	erunArgs = process.argv.splice(3);
+	environmentId = process.env.NODE_ENV;
+}
 
-// Compulsory, but using default because will get caught when looking for command
-let erunObject = (packageJson.erun && packageJson.erun[script]) || {};
+let erunObject;
+let erunAll = packageJson.erun || {};
+if (process.env.ERUN_SCRIPT === scriptId && process.env.ERUN_ENVIRONMENT === environmentId) {
+	// Prevent infinite recursion from occurring
+	erunObject =
+		erunAll[scriptId] ||
+		{};
+} else {
+	// First look for a script with both script name and environment name specified
+	erunObject =
+		erunAll[`${scriptId} ${environmentId}`] ||
+		erunAll[scriptId] ||
+		{};
+}
 
-if (!script) {
+if (!scriptId) {
 	errors.push('No script');
 }
 
-if (!environment) {
+if (!environmentId) {
 	errors.push('No environment');
 }
 
-// Use environment variables that the original process had, plus ones defined in "packageJson.erun[script].env",
+// Use environment variables that the original process had, plus ones defined in "packageJson.erun[scriptId].env",
 // and subtitute them in using the `${VARNAME}` convention
 const erunEnv = erunObject.env || {}; // Optional
-erunEnv.ERUN_SCRIPT = script;
-erunEnv.ERUN_ENVIRONMENT = erunEnv.NODE_ENV || environment || 'default';
+erunEnv.ERUN_SCRIPT = scriptId;
+erunEnv.ERUN_ENVIRONMENT = erunEnv.NODE_ENV || environmentId || 'default';
 erunEnv.NODE_ENV = erunEnv.ERUN_ENVIRONMENT;
 const envVarSubtitutionRegex = /\$\{([^\}]+)\}/g ;
 //TODO currently relies on key orders in object hash, which is not technically correct,
@@ -66,7 +101,7 @@ const envVars = Object.assign({}, processEnv, erunEnv);
 // and if they are mising, it will be an error
 let command = erunObject.cmd;
 if (!command) {
-	errors.push(`No command found for ${script}`);
+	errors.push(`No command found for ${scriptId}`);
 } else {
 	command.replace(envVarSubtitutionRegex, (match, varName) => {
 		let value = envVars[varName];
@@ -82,7 +117,7 @@ envVars.ERUN_COMMAND = command;
 
 if (errors.length > 0) {
 	// Print errors and exit
-	console.error(`Failed erun with script='${script}' environment='${environment}'`);
+	console.error(`Failed erun with script='${scriptId}' environment='${environmentId}'`);
 	errors.forEach((err) => {
 		console.error(`  - ${err}`);
 	});
