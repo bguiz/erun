@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 /**
  * Usage:
  *
@@ -58,17 +59,16 @@ if (environmentId) {
 
 let erunObject;
 let erunAll = packageJson.erun || {};
+let erunConfig = packageJson.erunConfig || {};
 if (process.env.ERUN_SCRIPT === scriptId && process.env.ERUN_ENVIRONMENT === environmentId) {
 	// Prevent infinite recursion from occurring
 	erunObject =
-		erunAll[scriptId] ||
-		{};
+		erunAll[scriptId] || {};
 } else {
 	// First look for a script with both script name and environment name specified
 	erunObject =
 		erunAll[`${scriptId} ${environmentId}`] ||
-		erunAll[scriptId] ||
-		{};
+		erunAll[scriptId] || {};
 }
 
 if (!scriptId) {
@@ -84,8 +84,19 @@ if (!environmentId) {
 const erunEnv = erunObject.env || {}; // Optional
 erunEnv.ERUN_SCRIPT = scriptId;
 erunEnv.ERUN_ENVIRONMENT = erunEnv.NODE_ENV || environmentId || 'default';
-erunEnv.NODE_ENV = erunEnv.ERUN_ENVIRONMENT;
-const envVarSubtitutionRegex = /\$\{([^\}]+)\}/g ;
+if (erunConfig.envSplitOn) {
+	const splitEnv = erunEnv.ERUN_ENVIRONMENT.split(erunConfig.envSplitOn);
+	splitEnv.forEach((splitEnvPart, splitEnvIndex) => {
+		erunEnv[`NODE_SUB_ENV_${splitEnvIndex}`] = splitEnvPart;
+	});
+	erunEnv.NODE_ENV = splitEnv[0];
+	if (splitEnv[1]){
+		erunEnv.NODE_SUB_ENV = splitEnv[1];
+	}
+} else {
+	erunEnv.NODE_ENV = erunEnv.ERUN_ENVIRONMENT;
+}
+const envVarSubtitutionRegex = /\$\{([^\}]+)\}/g;
 //TODO currently relies on key orders in object hash, which is not technically correct,
 // so devise a way to detect when this happens and substitute them later
 Object.keys(erunEnv).forEach((key) => {
@@ -117,8 +128,10 @@ envVars.ERUN_COMMAND = command;
 
 if (errors.length > 0) {
 	// Print errors and exit
+	// eslint-disable-next-line no-console
 	console.error(`Failed erun with script='${scriptId}' environment='${environmentId}'`);
 	errors.forEach((err) => {
+		// eslint-disable-next-line no-console
 		console.error(`  - ${err}`);
 	});
 	process.exit(1);
