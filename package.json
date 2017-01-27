@@ -1,7 +1,7 @@
 {
   "name": "erun",
-  "version": "0.3.0",
-  "description": "Customisable npm run scripts for multiple environments",
+  "version": "0.3.1",
+  "description": "Multi-environment aware task runner for NodeJs projects",
   "main": "erun.js",
   "bin": {
     "erun": "erun.js"
@@ -46,7 +46,7 @@
   },
   "homepage": "https://github.com/bguiz/erun#readme",
   "devDependencies": {
-    "eslint": "~3.14.1",
-    "husky": "~0.13.1"
+    "eslint": "^3.14.1",
+    "husky": "^0.13.1"
   }
 }
