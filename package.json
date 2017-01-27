@@ -7,17 +7,25 @@
     "erun": "erun.js"
   },
   "scripts": {
+    "lint": "eslint ./**/*.js",
     "test": "sh test/test.sh",
+    "prepush": "npm run lint && npm run test",
     "erun": "node ./erun.js "
+  },
+  "erunConfig": {
+    "envSplitOn": "-"
   },
   "erun": {
     "foobartest": {
-      "cmd": "echo FOO=${FOO} BAR=${BAR} FOOBAR=${FOOBAR} ENVIRONMENT=${ENVIRONMENT} > ./test/output/foobartest.out",
+      "cmd": "echo FOO=${FOO} BAR=${BAR} FOOBAR=${FOOBAR} ENV=${ENV} SUBENV=${SUBENV} SUBENV0=${SUBENV0} SUBENV1=${SUBENV1} > ./test/output/foobartest.out",
       "env": {
         "FOO": "foo",
         "BAR": "bar",
         "FOOBAR": "${FOO}-${BAR}",
-        "ENVIRONMENT": "${NODE_ENV}"
+        "ENV": "${NODE_ENV}",
+        "SUBENV0": "${NODE_SUB_ENV_0}",
+        "SUBENV": "${NODE_SUB_ENV}",
+        "SUBENV1": "${NODE_SUB_ENV_1}"
       }
     }
   },
@@ -36,5 +44,9 @@
   "bugs": {
     "url": "https://github.com/bguiz/erun/issues"
   },
-  "homepage": "https://github.com/bguiz/erun#readme"
+  "homepage": "https://github.com/bguiz/erun#readme",
+  "devDependencies": {
+    "eslint": "~3.14.1",
+    "husky": "~0.13.1"
+  }
 }
