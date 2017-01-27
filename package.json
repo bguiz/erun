@@ -1,7 +1,7 @@
 {
   "name": "erun",
   "version": "0.3.0",
-  "description": "Customisable npm run scripts for multiple environments",
+  "description": "Multi-environment aware task runner for NodeJs projects",
   "main": "erun.js",
   "bin": {
     "erun": "erun.js"

@@ -1,0 +1,107 @@
+= erun
+
+Multi-environment aware task runner for NodeJs projects.
+
+== Installation
+
+[source,bash]
+----
+npm install --save-dev erun
+----
+
+== Usage
+
+Run the following on the command line.
+
+[source,bash]
+----
+# Runs myTask with NODE_ENV=localhost
+npm run erun -- myTask localhost
+
+# Runs myTask with NODE_ENV=dev and with 2 extra arguments
+npm run erun -- myTask dev argOne argTwo
+
+# Runs myTask with NODE_ENV=production and NODE_SUB_ENV=staging
+npm run erun -- myTask production-staging
+----
+
+Specify `envSplitOn` in `erunConfig` if you wish to make use of `NODE_SUB_ENV`.
+This is optional, but useful when you need to support multiple deployment environments
+which utilise the same `NODE_ENV`,
+e.g. `production` might have `live`, `staging`, `pentest`, and `loadtest`.
+
+== Configuration
+
+Edit `package.json` to add some `erun` scripts.
+
+Each one needs a `cmd` as a string,
+and optionally may specify `env` as a hash of environment variables.
+
+=== `cmd`
+
+[source,json]
+----
+{
+	"erun": {
+		"start": {
+			"cmd": "node ./server/run.js"
+		},
+		"start localhost": {
+			"cmd": "nodemon --inspect ./server/run.js",
+			"env": {
+				"DEBUG": "true"
+			}
+		}
+	}
+}
+----
+
+In the above example, `npm run erun -- start localhost` would be the equivalent of executing
+`DEBUG=true nodemon --inspect ./server/run.js`,
+whereas `npm run erun -- start dev` (or any environment other than `localhost`) would be the equivalent of executing
+`node ./server/run.js`
+
+=== `env`
+
+Optionally, also edit `package.json` to add `erunConfig`.
+
+[source,json]
+----
+{
+	"erunConfig": {
+		"envSplitOn": "-"
+	}
+}
+----
+
+=== Variable substitution
+
+You can use the `${something}` syntax to substitute environment variables within the `env` hash,
+as well as the `cmd` string.
+
+[source,json]
+----
+{
+	"erun": {
+		"test": {
+			"cmd": "mocha --reporter mochawesome ./test/${NODE_ENV}-bootstrap.js ./test/**/*.spec.js",
+			"env": {
+				"MOCHAWESOME_REPORTDIR": "./reports/test/${NODE_ENV}",
+				"MOCHAWESOME_REPORTTITLE": "Tests on ${NODE_ENV}"
+			}
+		}
+	}
+}
+----
+
+In the above example, we see this employed in a `test` task,
+where `NODE_ENV` is used within the `env` hash to differ the report file name and title,
+and used within `cmd` to differ the "bootstrap" file loaded prior to the "spec" files.
+
+== Licence
+
+GPLv3
+
+== Author
+
+http://bguiz.com[Brendan Graetz]
