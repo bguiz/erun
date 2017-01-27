@@ -46,7 +46,7 @@
   },
   "homepage": "https://github.com/bguiz/erun#readme",
   "devDependencies": {
-    "eslint": "~3.14.1",
-    "husky": "~0.13.1"
+    "eslint": "^3.14.1",
+    "husky": "^0.13.1"
   }
 }
