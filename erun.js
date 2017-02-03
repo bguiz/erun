@@ -65,10 +65,26 @@ if (process.env.ERUN_SCRIPT === scriptId && process.env.ERUN_ENVIRONMENT === env
 	erunObject =
 		erunAll[scriptId] || {};
 } else {
+	const fullEnvId = environmentId;
+	let mainEnvId;
+	if (erunConfig.envSplitOn) {
+		mainEnvId = fullEnvId.split(erunConfig.envSplitOn)[0];
+	} else {
+		mainEnvId = fullEnvId;
+	}
 	// First look for a script with both script name and environment name specified
+	let mainEnvErunObject = erunAll[scriptId] || {};
 	erunObject =
-		erunAll[`${scriptId} ${environmentId}`] ||
-		erunAll[scriptId] || {};
+		erunAll[`${scriptId} ${fullEnvId}`] ||
+		erunAll[`${scriptId} ${mainEnvId}`];
+	if (erunObject) {
+		// We found one with both script and environment name specifeid
+		// In this special case, when the command is unspecified,
+		// we attempt to get it from the erun object without the script specified
+		erunObject.cmd = erunObject.cmd || mainEnvErunObject.cmd;
+	} else {
+		erunObject = mainEnvErunObject;
+	}
 }
 
 if (!scriptId) {

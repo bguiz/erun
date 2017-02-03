@@ -32,7 +32,21 @@ e.g. `production` might have `live`, `staging`, `pentest`, and `loadtest`.
 
 == Configuration
 
-Edit `package.json` to add some `erun` scripts.
+Edit `package.json`.
+
+For convenience, create an `npm run` script first:
+
+[source,json]
+----
+{
+	"scripts": {
+		"erun": "erun "
+	}
+}
+----
+
+Next add an `erun` hash,
+containing one or more `erun` scripts.
 
 Each one needs a `cmd` as a string,
 and optionally may specify `env` as a hash of environment variables.
@@ -97,6 +111,66 @@ as well as the `cmd` string.
 In the above example, we see this employed in a `test` task,
 where `NODE_ENV` is used within the `env` hash to differ the report file name and title,
 and used within `cmd` to differ the "bootstrap" file loaded prior to the "spec" files.
+
+=== Differing behaviour per environment
+
+==== Differing `cmd`:
+
+You can specify a default `erun` command for all environments,
+and also one for some environments or even sub-environments.
+
+[source, json]
+----
+{
+	"erun": {
+		"start": {
+			"cmd": "node ./server/start.js"
+		},
+		"start localhost": {
+			"cmd": "nodemon --inspect ./server/start.js"
+		}
+	}
+}
+----
+
+In the above example, `erun start dev` or `erun start production`
+would run the server script via `node`,
+but only `erun start localhost`
+would run the server script via `nodemon`.
+
+==== Differing `env`:
+
+If you would like the `cmd` to be the same on a particular environment,
+but have different environment variables, you can do that too.
+
+[source, json]
+----
+{
+	"erun": {
+		"start": {
+			"cmd": "node ./server/start.js"
+		},
+		"start localhost": {
+			"env": {
+				"DEBUG": "true"
+			}
+		}
+	}
+}
+----
+
+In the above example,
+`erun start localhost`, `erun start dev`, and `erun start production`
+would all run the server script via `node`,
+but only `erun start localhost`
+would do so with the `DEBUG` environment variable set.
+
+==== Differing both `cmd` and `env`
+
+Should you wish to do this, simply set *both* `cmd` and `env`,
+as shown above,
+and the environment specific `erun` script will not
+copy any behaviour from the generic `erun` script of the same name.
 
 == Licence
 
