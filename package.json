@@ -1,6 +1,6 @@
 {
   "name": "erun",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Multi-environment aware task runner for NodeJs projects",
   "main": "erun.js",
   "bin": {
@@ -17,17 +17,27 @@
   },
   "erun": {
     "foobartest": {
-      "cmd": "echo FOO=${FOO} BAR=${BAR} FOOBAR=${FOOBAR} ENV=${ENV} SUBENV=${SUBENV} SUBENV0=${SUBENV0} SUBENV1=${SUBENV1} > ./test/output/foobartest.out",
+      "cmd": "echo foobartest FOO=${FOO} BAR=${BAR} FOOBAR=${FOOBAR} ${NODE_ENV} ${NODE_SUB_ENV} ${NODE_SUB_ENV_0} ${NODE_SUB_ENV_1}",
       "env": {
         "FOO": "foo",
         "BAR": "bar",
-        "FOOBAR": "${FOO}-${BAR}",
-        "ENV": "${NODE_ENV}",
-        "SUBENV0": "${NODE_SUB_ENV_0}",
-        "SUBENV": "${NODE_SUB_ENV}",
-        "SUBENV1": "${NODE_SUB_ENV_1}"
+        "FOOBAR": "main-${NODE_ENV}-${FOO}-${BAR}"
       }
-    }
+    },
+		"foobartest sansCmd": {
+			"env": {
+				"FOO": "sansFoo",
+				"BAR": "sansBar",
+        "FOOBAR": "env-${NODE_ENV}-${FOO}-${BAR}"
+			}
+		},
+		"foobartest sansCmd-subEnv": {
+			"env": {
+				"FOO": "sansFoo",
+				"BAR": "sansBar",
+        "FOOBAR": "subEnv-${NODE_ENV}-${FOO}-${BAR}"
+			}
+		}
   },
   "repository": {
     "type": "git",
