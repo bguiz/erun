@@ -6,4 +6,4 @@ EXPECTED="foobartest FOO=foo BAR=bar FOOBAR=main-localhost-foo-bar localhost cus
 
 echo "ACTUAL  : ${ACTUAL}"
 echo "EXPECTED: ${EXPECTED}"
-test "${ACTUAL}" == "${EXPECTED}"
+test "${ACTUAL}" = "${EXPECTED}"

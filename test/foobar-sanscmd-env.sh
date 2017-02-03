@@ -6,4 +6,4 @@ EXPECTED="foobartest FOO=sansFoo BAR=sansBar FOOBAR=env-sansCmd-sansFoo-sansBar 
 
 echo "ACTUAL  : ${ACTUAL}"
 echo "EXPECTED: ${EXPECTED}"
-test "${ACTUAL}" == "${EXPECTED}"
+test "${ACTUAL}" = "${EXPECTED}"
