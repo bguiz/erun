@@ -13,3 +13,8 @@ charset = utf-8
 indent_style = space
 indent_size = 2
 charset = utf-8
+
+[*.yaml,*.yml]
+indent_style = space
+indent_size = 2
+charset = utf-8
