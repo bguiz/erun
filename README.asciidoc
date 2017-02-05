@@ -1,6 +1,10 @@
-= erun
+= `erun`
 
 Multi-environment aware task runner for NodeJs projects.
+
+image:https://nodei.co/npm/erun.png["NodeJs public registry listing",link="https://github.com/bguiz/erun/"]
+
+image:https://travis-ci.org/bguiz/erun.svg?branch=develop["Continuous Integration Build Status",link="https://travis-ci.org/bguiz/erun"]
 
 == Installation
 

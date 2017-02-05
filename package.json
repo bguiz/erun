@@ -1,6 +1,6 @@
 {
   "name": "erun",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Multi-environment aware task runner for NodeJs projects",
   "main": "erun.js",
   "bin": {

@@ -152,12 +152,17 @@ if (errors.length > 0) {
 	});
 	process.exit(1);
 } else {
-	// Now we can finally run the command!
-	//TODO support non-unix shell as well
-	childProcess.spawn('sh', ['-c', command], {
+	// Finally run the command (via child_process)!
+	const [shellName, shellSwitch] =
+		(process.platform !== 'win32') ?
+		['sh', '-c'] :
+		['cmd', '/c'];
+	childProcess.spawn(shellName, [shellSwitch, command], {
 		env: envVars,
 		stdio: 'inherit',
 	}).on('close', (childProcessExitCode) => {
+		// Ensure that we exit with the same code as the child process -
+		// don't swallow error codes, so as to avoid silent failures
 		process.exit(childProcessExitCode);
 	});
 }
