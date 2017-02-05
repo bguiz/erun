@@ -82,6 +82,11 @@ if (process.env.ERUN_SCRIPT === scriptId && process.env.ERUN_ENVIRONMENT === env
 		// In this special case, when the command is unspecified,
 		// we attempt to get it from the erun object without the script specified
 		erunObject.cmd = erunObject.cmd || mainEnvErunObject.cmd;
+		// We also use the environment variables specified in the erun object
+		// without the environment name provided,
+		// and override them with the environment variables specified in the erun object
+		// with the environment name spcecified
+		erunObject.env = Object.assign({}, mainEnvErunObject.env, erunObject.env);
 	} else {
 		erunObject = mainEnvErunObject;
 	}
