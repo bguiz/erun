@@ -17,27 +17,28 @@
   },
   "erun": {
     "foobartest": {
-      "cmd": "echo foobartest FOO=${FOO} BAR=${BAR} FOOBAR=${FOOBAR} ${NODE_ENV} ${NODE_SUB_ENV} ${NODE_SUB_ENV_0} ${NODE_SUB_ENV_1}",
+      "cmd": "echo foobartest BASEONLY=${BASEONLY} FOO=${FOO} BAR=${BAR} FOOBAR=${FOOBAR} ${NODE_ENV} ${NODE_SUB_ENV} ${NODE_SUB_ENV_0} ${NODE_SUB_ENV_1}",
       "env": {
         "FOO": "foo",
         "BAR": "bar",
-        "FOOBAR": "main-${NODE_ENV}-${FOO}-${BAR}"
+        "FOOBAR": "main-${NODE_ENV}-${FOO}-${BAR}",
+        "BASEONLY": "foobartestbase"
       }
     },
-		"foobartest sansCmd": {
-			"env": {
-				"FOO": "sansFoo",
-				"BAR": "sansBar",
+    "foobartest sansCmd": {
+      "env": {
+        "FOO": "sansFoo",
+        "BAR": "sansBar",
         "FOOBAR": "env-${NODE_ENV}-${FOO}-${BAR}"
-			}
-		},
-		"foobartest sansCmd-subEnv": {
-			"env": {
-				"FOO": "sansFoo",
-				"BAR": "sansBar",
+      }
+    },
+    "foobartest sansCmd-subEnv": {
+      "env": {
+        "FOO": "sansFoo",
+        "BAR": "sansBar",
         "FOOBAR": "subEnv-${NODE_ENV}-${FOO}-${BAR}"
-			}
-		}
+      }
+    }
   },
   "repository": {
     "type": "git",
